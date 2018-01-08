@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const Dropdown = React.createClass({
   propTypes: {
-    children: React.PropTypes.node,
+    children: PropTypes.node,
   },
   render () {
     // This component adds no markup

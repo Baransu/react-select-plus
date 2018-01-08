@@ -1,12 +1,13 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
 
 const OptionGroup = React.createClass({
 	propTypes: {
-		children: React.PropTypes.any,
-		className: React.PropTypes.string,             // className (based on mouse position)
-		label: React.PropTypes.node,                   // the heading to show above the child options
-		option: React.PropTypes.object.isRequired,     // object that is base for that option group
+		children: PropTypes.any,
+		className: PropTypes.string,             // className (based on mouse position)
+		label: PropTypes.node,                   // the heading to show above the child options
+		option: PropTypes.object.isRequired,     // object that is base for that option group
 	},
 
 	blockEvent (event) {

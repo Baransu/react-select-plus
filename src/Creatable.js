@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Select from './Select';
 import defaultFilterOptions from './utils/defaultFilterOptions';
@@ -10,36 +11,36 @@ const Creatable = React.createClass({
 		// Child function responsible for creating the inner Select component
 		// This component can be used to compose HOCs (eg Creatable and Async)
 		// (props: Object): PropTypes.element
-		children: React.PropTypes.func,
+		children: PropTypes.func,
 
 		// See Select.propTypes.filterOptions
-		filterOptions: React.PropTypes.any,
+		filterOptions: PropTypes.any,
 
 		// Searches for any matching option within the set of options.
 		// This function prevents duplicate options from being created.
 		// ({ option: Object, options: Array, labelKey: string, valueKey: string }): boolean
-		isOptionUnique: React.PropTypes.func,
+		isOptionUnique: PropTypes.func,
 
     // Determines if the current input text represents a valid option.
     // ({ label: string }): boolean
-    isValidNewOption: React.PropTypes.func,
+    isValidNewOption: PropTypes.func,
 
 		// See Select.propTypes.menuRenderer
-		menuRenderer: React.PropTypes.any,
+		menuRenderer: PropTypes.any,
 
     // Factory to create new option.
     // ({ label: string, labelKey: string, valueKey: string }): Object
-		newOptionCreator: React.PropTypes.func,
+		newOptionCreator: PropTypes.func,
 
 		// See Select.propTypes.options
-		options: React.PropTypes.array,
+		options: PropTypes.array,
 
     // Creates prompt/placeholder option text.
     // (filterText: string): string
-		promptTextCreator: React.PropTypes.func,
+		promptTextCreator: PropTypes.func,
 
 		// Decides if a keyDown event (eg its `keyCode`) should result in the creation of a new option.
-		shouldKeyDownEventCreateNewOption: React.PropTypes.func,
+		shouldKeyDownEventCreateNewOption: PropTypes.func,
 	},
 
 	// Default prop methods
@@ -214,7 +215,7 @@ function defaultChildren (props) {
 	return (
 		<Select {...props} />
 	);
-};
+}
 
 function isOptionUnique ({ option, options, labelKey, valueKey }) {
 	return options
@@ -223,11 +224,11 @@ function isOptionUnique ({ option, options, labelKey, valueKey }) {
 			existingOption[valueKey] === option[valueKey]
 		)
 		.length === 0;
-};
+}
 
 function isValidNewOption ({ label }) {
 	return !!label;
-};
+}
 
 function newOptionCreator ({ label, labelKey, valueKey }) {
 	const option = {};
@@ -235,7 +236,7 @@ function newOptionCreator ({ label, labelKey, valueKey }) {
  	option[labelKey] = label;
  	option.className = 'Select-create-option-placeholder';
  	return option;
-};
+}
 
 function promptTextCreator (label) {
 	return `Create option "${label}"`;
@@ -250,6 +251,6 @@ function shouldKeyDownEventCreateNewOption ({ keyCode }) {
 	}
 
 	return false;
-};
+}
 
 module.exports = Creatable;
