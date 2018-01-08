@@ -3,8 +3,9 @@ import React from 'react';
 import Select from './Select';
 import defaultFilterOptions from './utils/defaultFilterOptions';
 import defaultMenuRenderer from './utils/defaultMenuRenderer';
+import createReactClass from 'create-react-class';
 
-const Creatable = React.createClass({
+const Creatable = createReactClass({
 	displayName: 'CreatableSelect',
 
 	propTypes: {
@@ -21,26 +22,26 @@ const Creatable = React.createClass({
 		// ({ option: Object, options: Array, labelKey: string, valueKey: string }): boolean
 		isOptionUnique: PropTypes.func,
 
-    // Determines if the current input text represents a valid option.
-    // ({ label: string }): boolean
-    isValidNewOption: PropTypes.func,
+		// Determines if the current input text represents a valid option.
+		// ({ label: string }): boolean
+		isValidNewOption: PropTypes.func,
 
 		// See Select.propTypes.menuRenderer
 		menuRenderer: PropTypes.any,
 
-    // Factory to create new option.
-    // ({ label: string, labelKey: string, valueKey: string }): Object
+		// Factory to create new option.
+		// ({ label: string, labelKey: string, valueKey: string }): Object
 		newOptionCreator: PropTypes.func,
 
 		// See Select.propTypes.options
 		options: PropTypes.array,
 
-    // Creates prompt/placeholder option text.
-    // (filterText: string): string
+		// Creates prompt/placeholder option text.
+		// (filterText: string): string
 		promptTextCreator: PropTypes.func,
 
 		// Decides if a keyDown event (eg its `keyCode`) should result in the creation of a new option.
-		shouldKeyDownEventCreateNewOption: PropTypes.func,
+		shouldKeyDownEventCreateNewOption: PropTypes.func
 	},
 
 	// Default prop methods
@@ -52,7 +53,7 @@ const Creatable = React.createClass({
 		shouldKeyDownEventCreateNewOption
 	},
 
-	getDefaultProps () {
+	getDefaultProps() {
 		return {
 			filterOptions: defaultFilterOptions,
 			isOptionUnique,
@@ -60,11 +61,11 @@ const Creatable = React.createClass({
 			menuRenderer: defaultMenuRenderer,
 			newOptionCreator,
 			promptTextCreator,
-			shouldKeyDownEventCreateNewOption,
+			shouldKeyDownEventCreateNewOption
 		};
 	},
 
-	createNewOption () {
+	createNewOption() {
 		const {
 			isValidNewOption,
 			newOptionCreator,
@@ -73,7 +74,11 @@ const Creatable = React.createClass({
 		} = this.props;
 
 		if (isValidNewOption({ label: this.inputValue })) {
-			const option = newOptionCreator({ label: this.inputValue, labelKey: this.labelKey, valueKey: this.valueKey });
+			const option = newOptionCreator({
+				label: this.inputValue,
+				labelKey: this.labelKey,
+				valueKey: this.valueKey
+			});
 			const isOptionUnique = this.isOptionUnique({ option });
 
 			// Don't add the same option twice.
@@ -85,8 +90,13 @@ const Creatable = React.createClass({
 		}
 	},
 
-	filterOptions (...params) {
-		const { filterOptions, isValidNewOption, options, promptTextCreator } = this.props;
+	filterOptions(...params) {
+		const {
+			filterOptions,
+			isValidNewOption,
+			options,
+			promptTextCreator
+		} = this.props;
 
 		// TRICKY Check currently selected options as well.
 		// Don't display a create-prompt for a value that's selected.
@@ -127,10 +137,7 @@ const Creatable = React.createClass({
 		return filteredOptions;
 	},
 
-	isOptionUnique ({
-		option,
-		options
-	}) {
+	isOptionUnique({ option, options }) {
 		const { isOptionUnique } = this.props;
 
 		options = options || this.select.filterFlatOptions();
@@ -143,7 +150,7 @@ const Creatable = React.createClass({
 		});
 	},
 
-	menuRenderer (params) {
+	menuRenderer(params) {
 		const { menuRenderer } = this.props;
 
 		return menuRenderer({
@@ -152,12 +159,12 @@ const Creatable = React.createClass({
 		});
 	},
 
-	onInputChange (input) {
+	onInputChange(input) {
 		// This value may be needed in between Select mounts (when this.select is null)
 		this.inputValue = input;
 	},
 
-	onInputKeyDown (event) {
+	onInputKeyDown(event) {
 		const { shouldKeyDownEventCreateNewOption } = this.props;
 		const focusedOption = this.select.getFocusedOption();
 
@@ -173,7 +180,7 @@ const Creatable = React.createClass({
 		}
 	},
 
-	onOptionSelect (option, event) {
+	onOptionSelect(option, event) {
 		if (option === this._createPlaceholderOption) {
 			this.createNewOption();
 		} else {
@@ -181,7 +188,7 @@ const Creatable = React.createClass({
 		}
 	},
 
-	render () {
+	render() {
 		const {
 			children = defaultChildren,
 			newOptionCreator,
@@ -196,7 +203,7 @@ const Creatable = React.createClass({
 			menuRenderer: this.menuRenderer,
 			onInputChange: this.onInputChange,
 			onInputKeyDown: this.onInputKeyDown,
-			ref: (ref) => {
+			ref: ref => {
 				this.select = ref;
 
 				// These values may be needed in between Select mounts (when this.select is null)
@@ -211,41 +218,40 @@ const Creatable = React.createClass({
 	}
 });
 
-function defaultChildren (props) {
+function defaultChildren(props) {
+	return <Select {...props} />;
+}
+
+function isOptionUnique({ option, options, labelKey, valueKey }) {
 	return (
-		<Select {...props} />
+		options.filter(
+			existingOption =>
+				existingOption[labelKey] === option[labelKey] ||
+				existingOption[valueKey] === option[valueKey]
+		).length === 0
 	);
 }
 
-function isOptionUnique ({ option, options, labelKey, valueKey }) {
-	return options
-		.filter((existingOption) =>
-			existingOption[labelKey] === option[labelKey] ||
-			existingOption[valueKey] === option[valueKey]
-		)
-		.length === 0;
-}
-
-function isValidNewOption ({ label }) {
+function isValidNewOption({ label }) {
 	return !!label;
 }
 
-function newOptionCreator ({ label, labelKey, valueKey }) {
+function newOptionCreator({ label, labelKey, valueKey }) {
 	const option = {};
 	option[valueKey] = label;
- 	option[labelKey] = label;
- 	option.className = 'Select-create-option-placeholder';
- 	return option;
+	option[labelKey] = label;
+	option.className = 'Select-create-option-placeholder';
+	return option;
 }
 
-function promptTextCreator (label) {
+function promptTextCreator(label) {
 	return `Create option "${label}"`;
 }
 
-function shouldKeyDownEventCreateNewOption ({ keyCode }) {
+function shouldKeyDownEventCreateNewOption({ keyCode }) {
 	switch (keyCode) {
-		case 9:   // TAB
-		case 13:  // ENTER
+		case 9: // TAB
+		case 13: // ENTER
 		case 188: // COMMA
 			return true;
 	}

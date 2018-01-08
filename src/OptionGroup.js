@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
+import createReactClass from 'create-react-class';
 
-const OptionGroup = React.createClass({
+const OptionGroup = createReactClass({
 	propTypes: {
 		children: PropTypes.any,
-		className: PropTypes.string,             // className (based on mouse position)
-		label: PropTypes.node,                   // the heading to show above the child options
-		option: PropTypes.object.isRequired,     // object that is base for that option group
+		className: PropTypes.string, // className (based on mouse position)
+		label: PropTypes.node, // the heading to show above the child options
+		option: PropTypes.object.isRequired // object that is base for that option group
 	},
 
-	blockEvent (event) {
+	blockEvent(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		if ((event.target.tagName !== 'A') || !('href' in event.target)) {
+		if (event.target.tagName !== 'A' || !('href' in event.target)) {
 			return;
 		}
 		if (event.target.target) {
@@ -23,41 +24,44 @@ const OptionGroup = React.createClass({
 		}
 	},
 
-	handleMouseDown (event) {
+	handleMouseDown(event) {
 		event.preventDefault();
 		event.stopPropagation();
 	},
 
-	handleTouchEnd(event){
+	handleTouchEnd(event) {
 		// Check if the view is being dragged, In this case
 		// we don't want to fire the click event (because the user only wants to scroll)
-		if(this.dragging) return;
+		if (this.dragging) return;
 
 		this.handleMouseDown(event);
 	},
 
-	handleTouchMove (event) {
+	handleTouchMove(event) {
 		// Set a flag that the view is being dragged
 		this.dragging = true;
 	},
 
-	handleTouchStart (event) {
+	handleTouchStart(event) {
 		// Set a flag that the view is not being dragged
 		this.dragging = false;
 	},
 
-	render () {
+	render() {
 		var { option } = this.props;
 		var className = classNames(this.props.className, option.className);
 
 		return option.disabled ? (
-			<div className={className}
+			<div
+				className={className}
 				onMouseDown={this.blockEvent}
-				onClick={this.blockEvent}>
+				onClick={this.blockEvent}
+			>
 				{this.props.children}
 			</div>
 		) : (
-			<div className={className}
+			<div
+				className={className}
 				style={option.style}
 				onMouseDown={this.handleMouseDown}
 				onMouseEnter={this.handleMouseEnter}
@@ -65,10 +69,9 @@ const OptionGroup = React.createClass({
 				onTouchStart={this.handleTouchStart}
 				onTouchMove={this.handleTouchMove}
 				onTouchEnd={this.handleTouchEnd}
-				title={option.title}>
-				<div className="Select-option-group-label">
-					{this.props.label}
-				</div>
+				title={option.title}
+			>
+				<div className="Select-option-group-label">{this.props.label}</div>
 				{this.props.children}
 			</div>
 		);

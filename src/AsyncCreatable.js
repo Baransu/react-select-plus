@@ -1,31 +1,31 @@
 import React from 'react';
 import Select from './Select';
+import createReactClass from 'create-react-class';
 
-function reduce(obj, props = {}){
-  return Object.keys(obj)
-  .reduce((props, key) => {
-    const value = obj[key];
-    if (value !== undefined) props[key] = value;
-    return props;
-  }, props);
+function reduce(obj, props = {}) {
+	return Object.keys(obj).reduce((props, key) => {
+		const value = obj[key];
+		if (value !== undefined) props[key] = value;
+		return props;
+	}, props);
 }
 
-const AsyncCreatable = React.createClass({
+const AsyncCreatable = createReactClass({
 	displayName: 'AsyncCreatableSelect',
 
-	render () {
+	render() {
 		return (
 			<Select.Async {...this.props}>
-				{(asyncProps) => (
+				{asyncProps => (
 					<Select.Creatable {...this.props}>
-						{(creatableProps) => (
+						{creatableProps => (
 							<Select
 								{...reduce(asyncProps, reduce(creatableProps, {}))}
-								onInputChange={(input) => {
+								onInputChange={input => {
 									creatableProps.onInputChange(input);
 									return asyncProps.onInputChange(input);
 								}}
-								ref={(ref) => {
+								ref={ref => {
 									creatableProps.ref(ref);
 									asyncProps.ref(ref);
 								}}
