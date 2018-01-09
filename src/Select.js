@@ -989,8 +989,9 @@ const Select = createReactClass({
 			(this.props.multi && !this.props.value.length) ||
 			this.props.disabled ||
 			this.props.isLoading
-		)
+		) {
 			return;
+		}
 		return (
 			<span
 				className="Select-clear-zone"
@@ -1231,8 +1232,10 @@ const Select = createReactClass({
 			!options.length &&
 			valueArray.length &&
 			!this.state.inputValue
-		)
+		) {
 			isOpen = false;
+		}
+
 		const focusedOptionIndex = this.getFocusableOptionIndex(valueArray[0]);
 
 		let focusedOption = null;
